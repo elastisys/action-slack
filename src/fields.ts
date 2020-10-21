@@ -179,7 +179,7 @@ export class FieldFactory {
     const sha = context.payload.pull_request?.head.sha ?? context.sha;
     const { owner, repo } = context.repo;
 
-    const value = `<https://github.com/${owner}/${repo}/commit/${sha}/checks|${context.workflow}>`;
+    const value = `<https://github.com/${owner}/${repo}/actions/runs/${context.runId}|${context.workflow}>`;
     process.env.AS_WORKFLOW = value;
     return value;
   }
