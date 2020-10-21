@@ -176,7 +176,6 @@ export class FieldFactory {
   }
 
   private async workflow(): Promise<string> {
-    const sha = context.payload.pull_request?.head.sha ?? context.sha;
     const { owner, repo } = context.repo;
 
     const value = `<https://github.com/${owner}/${repo}/actions/runs/${context.runId}|${context.workflow}>`;
