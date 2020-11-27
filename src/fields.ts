@@ -95,18 +95,28 @@ export class FieldFactory {
       repo: context.repo.repo,
       run_id: context.runId,
     });
-    const currentJob = resp?.data.jobs.find(job => job.name === this.jobName);
-    if (currentJob === undefined) {
+
+    let longest_time = 0;
+    resp?.data.jobs.forEach(currentJob => {
+      if (currentJob !== undefined) {
+        const time =
+          new Date().getTime() - new Date(currentJob.started_at).getTime();
+        if (longest_time < time) {
+          longest_time = time;
+        }
+      }
+    });
+
+    if (longest_time === 0) {
       process.env.AS_JOB = this.jobIsNotFound;
       return this.jobIsNotFound;
     }
 
-    let time = new Date().getTime() - new Date(currentJob.started_at).getTime();
-    const h = Math.floor(time / (1000 * 60 * 60));
-    time -= h * 1000 * 60 * 60;
-    const m = Math.floor(time / (1000 * 60));
-    time -= m * 1000 * 60;
-    const s = Math.floor(time / 1000);
+    const h = Math.floor(longest_time / (1000 * 60 * 60));
+    longest_time -= h * 1000 * 60 * 60;
+    const m = Math.floor(longest_time / (1000 * 60));
+    longest_time -= m * 1000 * 60;
+    const s = Math.floor(longest_time / 1000);
 
     let value = '';
     if (h > 0) {
